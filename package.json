@@ -1,6 +1,6 @@
 {
   "name": "vscode-electron-manager",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Install/Spawn Electron installation in your vscode extension",
   "main": "dist/index.js",
   "scripts": {

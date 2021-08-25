@@ -127,6 +127,8 @@ export class ElectronManager {
                         })
                     },
                 })
+                console.log("Attempting to download, url: ", url)
+
                 await downloader.download()
 
                 progress.report({ message: 'Extracting...' })
@@ -146,7 +148,10 @@ export class ElectronManager {
     private resolveLocalElectron(): Promise<ResolvedExecutable | null> {
         return new Promise(resolve => {
             fs.readdir(this.installDir, async (err, files) => {
-                if (err) resolve(null)
+                if (err) {
+                    resolve(null)
+                    return
+                }
 
                 // TODO Use better regex to detect 'electron-${version}-${os.platform()}-[x|arm]64'
                 files = files.filter(f => f.startsWith('electron-') && f.endsWith('64'))
@@ -154,7 +159,10 @@ export class ElectronManager {
                 // don't know what to do with multiple installations at this point
                 // so just use the first file name for now
                 const dirName = files[0]
-                if (!dirName) resolve(null)
+                if (!dirName) {
+                    resolve(null)
+                    return
+                }
 
                 const execPath = path.resolve(
                     this.installDir,
@@ -251,9 +259,13 @@ export class ElectronManager {
     }
 
     private getDownloadUrl(version: string): { url: string; fileName: string } {
+        if (!version.startsWith('v')) version = `v${version}`
+
         const baseUrl = `https://github.com/electron/electron/releases/download/`
         const fileName = `electron-${version}-${os.platform()}-${os.arch()}.zip`
+
         const url = baseUrl + version + '/' + fileName
+
         return { url, fileName }
     }
 
