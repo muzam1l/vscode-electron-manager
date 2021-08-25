@@ -2,7 +2,13 @@
 
 `npm install vscode-electron-manager`
 
-> Currently In beta, installs/spawns platform specific electron executable for your vscode extension to use and communicate with.
+## About
+
+> Currently In beta
+
+Installs/spawns platform specific electron executable for your vscode extension to use and communicate with. You can use that executable to run your uncompiled JavaScript files implementing electron Api in vscode extension, without having to bundle them into electron for each platform.
+
+Your extension and electron process can also seamlessly communicate via Node Ipc channels, see below.
 
 
 ## Use
@@ -55,5 +61,69 @@ try {
 
     // open an issue about some specific case
 }
+
+```
+
+## Setup
+
+If you want to have electron Javascript files in same vscode project, you might need to save `electron` package as dev dependency in your package.json for Typescript to work.
+
+Below is sample webpack config to bundle electron files sperately within your extension.
+
+```javascript
+// webpack.config.js
+const commonConfig = {
+    node: { __dirname: false },
+    // common config and modules (like ts-loader)
+} 
+// Outputs main extension file, use node and vscode modules.
+const extensionConfig = {
+    ...commonConfig,
+    target: 'node',
+    entry: './src/extension.ts',
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'extension.js',
+        libraryTarget: 'commonjs2'
+    },
+    externals: {
+        vscode: 'commonjs vscode'
+    },
+}
+
+// Outputs electron-main.js implementing electron Main process
+// it needs to be passed to <ElectronManager>.start and then it manages BrowserWindows and renderer/preload processes.
+const electronMainConfig = {
+    ...commonConfig,
+    target: 'electron-main',
+    entry: './src/electron/main.ts',
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'electron-main.js'
+    }
+}
+
+// Outputs electron-renderer.js implementing Electron Renderer process and calling that from html file loaded with Electrons <BrowserWindow>.loadFile
+
+const electronRendererConfig = {
+    ...commonConfig,
+    target: 'electron-renderer',
+    entry: './src/electron/renderer.ts',
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'electron-renderer.js'
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: "./src/electron/index.html"
+        })
+    ]
+}
+
+module.exports = [
+    extensionConfig,
+    electronMainConfig,
+    electronRendererConfig
+]
 
 ```

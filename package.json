@@ -1,8 +1,9 @@
 {
   "name": "vscode-electron-manager",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Install/Spawn Electron installation in your vscode extension",
   "main": "dist/index.js",
+  "repository": "https://github.com/muzam1l/vscode-electron-manager",
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
@@ -10,6 +11,12 @@
   },
   "files": [
     "dist/**/*"
+  ],
+  "keywords": [
+    "vscode",
+    "extension",
+    "electron",
+    "api"
   ],
   "author": "muzam1l",
   "license": "MIT",
