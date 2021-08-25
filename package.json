@@ -1,0 +1,31 @@
+{
+  "name": "vscode-electron-manager",
+  "version": "0.0.1",
+  "description": "Install/Spawn Electron installation in your vscode extension",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "author": "muzam1l",
+  "license": "MIT",
+  "dependencies": {
+    "extract-zip": "^2.0.1",
+    "node-fetch": "^2.6.1",
+    "nodejs-file-downloader": "^4.7.2",
+    "semver": "^7.3.5",
+    "rimraf": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.7.1",
+    "@types/node-fetch": "^2.5.12",
+    "@types/rimraf": "^3.0.2",
+    "@types/semver": "^7.3.8",
+    "@types/vscode": "^1.59.0",
+    "typescript": "^4.3.5"
+  }
+}
